@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { addTask } from "../features/todoSlice";
 import { TextField, Button, MenuItem } from "@mui/material";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 
 const TaskInput = () => {
   const [task, setTask] = useState("");
@@ -12,7 +13,8 @@ const TaskInput = () => {
   const handleAddTask = () => {
     if (task.trim() === "") return;
     dispatch(
-      addTask({ id: Date.now(), text: task, priority, completed: false })
+      addTask({ id: Date.now(), text: task, priority, completed: false }),
+      toast.success("Task Added Successfully")
     );
     setTask("");
     setPriority("Medium");
@@ -45,13 +47,13 @@ const TaskInput = () => {
           fullWidth
           value={task}
           onChange={(e) => setTask(e.target.value)}
-          InputLabelProps={{ style: { color: "#bbb" } }} // Light text color
+          InputLabelProps={{ style: { color: "#bbb" } }} 
           sx={{
             "& .MuiOutlinedInput-root": {
               color: "#fff",
-              "& fieldset": { borderColor: "#555" }, // Border color
-              "&:hover fieldset": { borderColor: "#888" }, // Hover effect
-              "&.Mui-focused fieldset": { borderColor: "#4A90E2" }, // Focus effect
+              "& fieldset": { borderColor: "#555" }, 
+              "&:hover fieldset": { borderColor: "#888" }, 
+              "&.Mui-focused fieldset": { borderColor: "#4A90E2" },
             },
           }}
         />

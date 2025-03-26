@@ -1,122 +1,113 @@
 import React, { useState } from "react";
-import { Box, TextField, Button, Typography, Paper } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [current, setCurrent] = useState("signup");
+  const [formData, setFormData] = useState({ name: "", email: "", password: "" });
+  const navigate = useNavigate();
 
   const handleToggle = () => {
     setCurrent((prev) => (prev === "login" ? "signup" : "login"));
+    setFormData({ name: "", email: "", password: "" }); // Reset fields
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (current === "signup" && (!formData.name || !formData.email || !formData.password)) {
+      toast.error("Please fill all fields")
+      return;
+    }
+    if (current === "login" && (!formData.email || !formData.password)) {
+      toast.error("Please fill all fields!");
+      return;
+    }
+    navigate("/tasks"); 
   };
 
   return (
-    <Box className="flex  justify-center items-center min-h-screen bg-gray-900 px-4">
+    <div className="flex justify-center items-center min-h-screen bg-gray-900 px-4">
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: "easeInOut" }}
+        className="w-full max-w-sm p-8 bg-gray-800 rounded-xl shadow-lg border border-gray-700"
       >
-        <Paper
-          elevation={8}
-          className="p-8 rounded-xl w-96 max-w-sm bg-gray-800 shadow-lg border border-gray-700"
+        <motion.h2
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+          className="text-center text-white text-2xl font-semibold mb-6"
         >
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-          >
-            <Typography
-              variant="h5"
-              className="text-center font-semibold mb-6 text-white"
-            >
-              {current === "signup" ? "Create an Account" : "Welcome Back"}
-            </Typography>
-          </motion.div>
+          {current === "signup" ? "Create an Account" : "Welcome Back"}
+        </motion.h2>
 
-          <Box
-            component="form"
-            sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-            noValidate
-            autoComplete="off"
-          >
-            {current === "signup" && (
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
-              >
-                <TextField
-                  label="Name"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  InputLabelProps={{ className: "text-gray-400" }}
-                  sx={{ "& .MuiOutlinedInput-root": { color: "#fff" } }}
-                />
-              </motion.div>
-            )}
-            <motion.div
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          {current === "signup" && (
+            <motion.input
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4, duration: 0.5 }}
-            >
-              <TextField
-                label="Email"
-                type="email"
-                variant="outlined"
-                required
-                fullWidth
-                InputLabelProps={{ className: "text-gray-400" }}
-                sx={{ "& .MuiOutlinedInput-root": { color: "#fff" } }}
-              />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-            >
-              <TextField
-                label="Password"
-                type="password"
-                variant="outlined"
-                required
-                fullWidth
-                InputLabelProps={{ className: "text-gray-400" }}
-                sx={{ "& .MuiOutlinedInput-root": { color: "#fff" } }}
-              />
-            </motion.div>
+              transition={{ delay: 0.3, duration: 0.5 }}
+              type="text"
+              name="name"
+              placeholder="Name"
+              value={formData.name}
+              onChange={handleChange}
+              className="w-full p-3 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          )}
+          <motion.input
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            className="w-full p-3 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <motion.input
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            className="w-full p-3 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.5 }}
-            >
-              <Link to={"/tasks"}>
-                <Button variant="contained" color="primary" fullWidth>
-                  {current === "signup" ? "Sign Up" : "Login"}
-                </Button>
-              </Link>
-            </motion.div>
-          </Box>
-
-          <motion.div
+          <motion.button
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.5 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+            type="submit"
+            className="w-full cursor-pointer p-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md"
           >
-            <Typography variant="body2" className="text-center mt-6 text-gray-400">
-              {current === "signup"
-                ? "Already have an account?"
-                : "Don't have an account?"}{" "}
-              <Button onClick={handleToggle} color="secondary">
-                {current === "signup" ? "Login" : "Sign Up"}
-              </Button>
-            </Typography>
-          </motion.div>
-        </Paper>
+            {current === "signup" ? "Sign Up" : "Login"}
+          </motion.button>
+        </form>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7, duration: 0.5 }}
+          className="text-center mt-6 text-gray-400"
+        >
+          {current === "signup" ? "Already have an account?" : "Don't have an account?"}{" "}
+          <button onClick={handleToggle} className="text-blue-400 cursor-pointer hover:underline">
+            {current === "signup" ? "Login" : "Sign Up"}
+          </button>
+        </motion.p>
       </motion.div>
-    </Box>
+    </div>
   );
 };
 

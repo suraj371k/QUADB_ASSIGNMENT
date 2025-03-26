@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { deleteTask } from "../features/todoSlice";
 import { FaTrash } from "react-icons/fa";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const TaskItem = ({ task }) => {
   const dispatch = useDispatch();
@@ -10,6 +12,11 @@ const TaskItem = ({ task }) => {
     High: "bg-red-400 border-red-500",
     Medium: "bg-yellow-600 border-yellow-500",
     Low: "bg-green-600 border-green-500",
+  };
+
+  const handleDelete = () => {
+    dispatch(deleteTask(task.id));
+    toast.success("Task deleted successfully!");
   };
 
   return (
@@ -41,7 +48,7 @@ const TaskItem = ({ task }) => {
       <motion.button
         whileHover={{ scale: 1.1, rotate: 10 }}
         whileTap={{ scale: 0.9 }}
-        onClick={() => dispatch(deleteTask(task.id))}
+        onClick={handleDelete}
         className="text-red-700 hover:text-red-900 cursor-pointer transition duration-300"
       >
         <FaTrash size={20} />
